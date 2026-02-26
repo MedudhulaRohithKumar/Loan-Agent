@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusBank | Agentic Loan Origination</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="container glassmorphism fade-in-up">
+        <header class="app-header">
+            <h1>NexusBank</h1>
+            <p>Autonomous Agentic Loan Origination</p>
+        </header>
+
+        <form id="loanForm" class="loan-form">
+            <div class="form-section">
+                <h2>1. Personal Details</h2>
+                <div class="input-group">
+                    <input type="text" id="firstName" name="first_name" required placeholder=" ">
+                    <label for="firstName">First Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="lastName" name="last_name" required placeholder=" ">
+                    <label for="lastName">Last Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" required placeholder=" ">
+                    <label for="email">Email Address</label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>2. Financial Information</h2>
+                <div class="input-group">
+                    <input type="number" id="annualIncome" name="annual_income" required placeholder=" ">
+                    <label for="annualIncome">Annual Income ($)</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="loanAmount" name="loan_amount" required placeholder=" ">
+                    <label for="loanAmount">Requested Loan Amount ($)</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="creditScore" name="credit_score" required placeholder=" ">
+                    <label for="creditScore">Credit Score</label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>3. Verification Documents</h2>
+                <div class="file-upload">
+                    <label for="identityDocument" class="file-label">
+                        <span class="file-icon">📄</span> <span id="idFileName">Upload Identity Proof (Optional)</span>
+                    </label>
+                    <input type="file" id="identityDocument" name="identity_document" accept=".pdf, .png, .jpg, .jpeg">
+                </div>
+                <div class="file-upload">
+                    <label for="incomeProof" class="file-label">
+                        <span class="file-icon">📊</span> <span id="incomeFileName">Upload Income Proof
+                            (Optional)</span>
+                    </label>
+                    <input type="file" id="incomeProof" name="income_proof" accept=".pdf, .png, .jpg, .jpeg">
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span class="btn-text">Initiate Agentic Application</span>
+                <div class="spinner" id="btnSpinner" style="display:none;"></div>
+            </button>
+        </form>
+
+        <div id="statusPipeline" class="status-pipeline hidden">
+            <h2>Autonomous Processing</h2>
+            <div class="pipeline-stages">
+                <div class="stage" id="stage-intake">
+                    <div class="stage-icon">📥</div>
+                    <div class="stage-details">
+                        <h4>Intake Agent</h4>
+                        <p>Awaiting data ingestion...</p>
+                    </div>
+                </div>
+                <div class="stage" id="stage-validation">
+                    <div class="stage-icon">🔍</div>
+                    <div class="stage-details">
+                        <h4>Validation Agent</h4>
+                        <p>Pending document & rule checks...</p>
+                    </div>
+                </div>
+                <div class="stage" id="stage-decision">
+                    <div class="stage-icon">⚖️</div>
+                    <div class="stage-details">
+                        <h4>Decision Agent</h4>
+                        <p>Pending final review...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultModal" class="result-modal hidden">
+            <h2 id="resultTitle">Decision Pending</h2>
+            <div class="remarks-box">
+                <p id="resultRemarks">Remarks will appear here.</p>
+            </div>
+            <button id="resetBtn" class="secondary-btn">New Application</button>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
