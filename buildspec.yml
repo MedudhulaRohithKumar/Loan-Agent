@@ -5,7 +5,7 @@ env:
     AWS_DEFAULT_REGION: "ap-south-2"
     AWS_ACCOUNT_ID: "384722508819"
     IMAGE_REPO_NAME: "loan-agent-app"
-    CONTAINER_NAME: "loan-agent-task" # Replace this once you find your ECS container name
+    CONTAINER_NAME: "loan-agent-task:1" # Replace this once you find your ECS container name
 
 phases:
   install:
