@@ -7,7 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install default dependencies (you can replace this with copying a requirements.txt)
-RUN pip install --no-cache-dir fastapi uvicorn python-multipart joblib scikit-learn pandas pydantic
+RUN pip install --no-cache-dir fastapi uvicorn python-multipart joblib scikit-learn==1.8.0 pandas pydantic
 
 # Copy the entire project to the working directory
 COPY . /app/
