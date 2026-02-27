@@ -1,5 +1,12 @@
 version: 0.2
 
+env:
+  variables:
+    AWS_DEFAULT_REGION: "ap-south-2"
+    AWS_ACCOUNT_ID: "384722508819"
+    IMAGE_REPO_NAME: "loan-agent-app"
+    CONTAINER_NAME: "loan-agent-task" # Replace this once you find your ECS container name
+
 phases:
   install:
     runtime-versions:
@@ -27,4 +34,5 @@ phases:
       - echo Writing image definitions file...
       - printf '[{"name":"%s","imageUri":"%s"}]' "$CONTAINER_NAME" "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
 artifacts:
-    files: imagedefinitions.json
+  files:
+    - imagedefinitions.json
