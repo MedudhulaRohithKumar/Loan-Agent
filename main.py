@@ -40,7 +40,11 @@ async def get_index():
 
 @app.get("/dashboard")
 async def get_dashboard():
-    return FileResponse("static/dashboard.html")
+    return FileResponse("static/dashboard.html", headers={
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+    })
 
 @app.get("/api/dashboard-data")
 async def get_dashboard_data(db: Session = Depends(get_db)):
