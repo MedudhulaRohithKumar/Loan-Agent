@@ -188,6 +188,13 @@
             /* Header height */
         }
 
+        .left-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: 100%;
+        }
+
         .glass-panel {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -286,6 +293,15 @@
         .text-glow-purple {
             color: var(--purple);
             text-shadow: 0 0 15px rgba(137, 87, 229, 0.4);
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
         }
 
         /* Sidebar Lists */
@@ -606,16 +622,30 @@
     </header>
 
     <main>
-        <!-- LEFT: Pipeline List -->
-        <div class="glass-panel">
-            <div class="panel-header">
-                Active Applications
+        <!-- LEFT: Pipeline Lists -->
+        <div class="left-col">
+            <div class="glass-panel" style="flex: 1;">
+                <div class="panel-header" style="color: var(--success);">
+                    Approved Queue
+                </div>
+                <div class="panel-content">
+                    <div class="app-list" id="approved-list">
+                        <div class="empty-state" style="padding: 1rem;">
+                            <p style="font-size: 0.8rem">No applications</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="panel-content">
-                <div class="app-list" id="pipeline-list">
-                    <div class="empty-state">
-                        <div class="empty-icon">📡</div>
-                        <p>Awaiting incoming payloads.<br>Submit via portal.</p>
+
+            <div class="glass-panel" style="flex: 1;">
+                <div class="panel-header" style="color: var(--error);">
+                    Rejected & Review
+                </div>
+                <div class="panel-content">
+                    <div class="app-list" id="rejected-list">
+                        <div class="empty-state" style="padding: 1rem;">
+                            <p style="font-size: 0.8rem">No applications</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -736,16 +766,23 @@
         }
 
         function renderList(apps) {
-            const list = document.getElementById('pipeline-list');
+            const approvedList = document.getElementById('approved-list');
+            const rejectedList = document.getElementById('rejected-list');
+
             if (apps.length === 0) return;
 
-            list.innerHTML = '';
-            apps.forEach((app, index) => {
+            approvedList.innerHTML = '';
+            rejectedList.innerHTML = '';
+
+            let firstRendered = false;
+
+            apps.forEach((app) => {
                 const el = document.createElement('div');
                 el.className = `app-item ${app.id === selectedAppId ? 'active' : ''}`;
-                if (!selectedAppId && index === 0) {
+                if (!selectedAppId && !firstRendered) {
                     el.classList.add('active');
                     selectApp(app);
+                    firstRendered = true;
                 }
 
                 const isApproved = app.decision === 'APPROVED';
@@ -762,13 +799,25 @@
                     el.classList.add('active');
                     selectApp(app);
                 };
-                list.appendChild(el);
+
+                if (isApproved) {
+                    approvedList.appendChild(el);
+                } else {
+                    rejectedList.appendChild(el);
+                }
 
                 // Add to log if new
                 if (!currentDataIds.includes(app.id)) {
                     addLog(app);
                 }
             });
+
+            if (approvedList.children.length === 0) {
+                approvedList.innerHTML = '<div class="empty-state" style="padding: 1rem;"><p style="font-size: 0.8rem">No approved applications</p></div>';
+            }
+            if (rejectedList.children.length === 0) {
+                rejectedList.innerHTML = '<div class="empty-state" style="padding: 1rem;"><p style="font-size: 0.8rem">No rejected applications</p></div>';
+            }
         }
 
         function selectApp(app) {

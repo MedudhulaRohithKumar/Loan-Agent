@@ -1,11 +1,20 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 import os
+import uuid
+import datetime
+
+from sqlalchemy.orm import Session
+from database import engine, get_db, Base
+import models
 
 from agents.intake_agent import IntakeAgent
 from agents.validation_agent import ValidationAgent
 from agents.decision_agent import DecisionAgent
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Autonomous Loan Origination Agentic System")
 
@@ -18,13 +27,6 @@ app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 intake_agent = IntakeAgent()
 validation_agent = ValidationAgent()
 decision_agent = DecisionAgent()
-
-from fastapi.responses import FileResponse
-
-import uuid
-import datetime
-
-applications = []
 
 def generate_app_id():
     return f"APP-{datetime.datetime.now().strftime('%y%m%d')}-{str(uuid.uuid4())[:4].upper()}"
@@ -41,20 +43,45 @@ async def get_dashboard():
     return FileResponse("static/dashboard.html")
 
 @app.get("/api/dashboard-data")
-async def get_dashboard_data():
-    approved = sum(1 for a in applications if a["decision"] == "APPROVED")
-    denied = sum(1 for a in applications if a["decision"] == "REJECTED")
-    review = sum(1 for a in applications if a["decision"] == "REVIEW")
+async def get_dashboard_data(db: Session = Depends(get_db)):
+    db_apps = db.query(models.Application).order_by(models.Application.id.desc()).all()
+    
+    approved = sum(1 for a in db_apps if a.status == "Approved")
+    denied = sum(1 for a in db_apps if a.status == "Rejected")
+    error = sum(1 for a in db_apps if a.status == "Error")
+    
+    # Format for the frontend dashboard
+    formatted_apps = []
+    for app in db_apps:
+        safe_income = float(app.annual_income) if app.annual_income and float(app.annual_income) > 0 else 1.0
+        dti_val = (float(app.loan_amount) / safe_income) * 100 if app.loan_amount else 0
+        rate = "6.875% APR" if app.status == "Approved" else "N/A"
+        initials = f"{app.first_name[0]}{app.last_name[0]}".upper() if app.first_name and app.last_name else "??"
+        
+        formatted_apps.append({
+            "initials": initials,
+            "name": f"{app.first_name} {app.last_name}",
+            "id": f"APP-{app.id:04d}",
+            "amt": format_currency(float(app.loan_amount)) if app.loan_amount else "$0",
+            "type": "PERSONAL",
+            "dti": f"{dti_val:.1f}%",
+            "score": app.credit_score,
+            "decision": app.status.upper() if app.status else "UNKNOWN",
+            "rate": rate,
+            "desc": f"Confidence: {app.confidence:.1f}% · {format_currency(float(app.loan_amount))} · {app.first_name}",
+            "label": f"APP-{app.id:04d}",
+            "created_at": "Today"
+        })
     
     return {
         "stats": {
             "approved": approved,
             "denied": denied,
-            "review": review,
+            "review": error,
             "queue": 0,
-            "total_processed": len(applications)
+            "total_processed": len(db_apps)
         },
-        "applications": applications
+        "applications": formatted_apps
     }
 
 @app.post("/api/apply")
@@ -65,10 +92,31 @@ async def apply_loan(
     annual_income: float = Form(...),
     loan_amount: float = Form(...),
     credit_score: int = Form(...),
-    identity_document: UploadFile = File(None),
-    income_proof: UploadFile = File(None)
+    employment_status: int = Form(...),
+    housing_status: int = Form(...),
+    loan_term: int = Form(...),
+    db: Session = Depends(get_db)
 ):
     try:
+        # DB Record Init
+        new_app = models.Application(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            annual_income=annual_income,
+            loan_amount=loan_amount,
+            credit_score=credit_score,
+            employment_status=employment_status,
+            housing_status=housing_status,
+            loan_term=loan_term,
+            status="Processing",
+            confidence=0.0,
+            remarks=""
+        )
+        db.add(new_app)
+        db.commit()
+        db.refresh(new_app)
+
         # Phase 1: Intake
         intake_data = await intake_agent.process(
             first_name=first_name,
@@ -77,8 +125,9 @@ async def apply_loan(
             annual_income=annual_income,
             loan_amount=loan_amount,
             credit_score=credit_score,
-            identity_doc_name=identity_document.filename if identity_document else None,
-            income_doc_name=income_proof.filename if income_proof else None
+            employment_status=employment_status,
+            housing_status=housing_status,
+            loan_term=loan_term
         )
         
         # Phase 2: Validation
@@ -97,35 +146,38 @@ async def apply_loan(
             remarks = decision_result.get("remarks")
             status_code = 200
             stage = "Decision Agent"
+            
+            # Extract confidence for DB
+            import re
+            match = re.search(r'(\d+\.\d+)%', remarks)
+            if match:
+                confidence_score = float(match.group(1))
+            else:
+                confidence_score = 0.0
 
-        # Save to memory
-        app_id = generate_app_id()
-        rate = "6.875% APR" if decision_label == "APPROVED" else "N/A"
-        initials = f"{first_name[0]}{last_name[0]}".upper()
-        
-        safe_income = float(annual_income) if float(annual_income) > 0 else 1.0
-        dti_val = (float(loan_amount) / safe_income) * 100
-        
-        new_app = {
-            "initials": initials,
-            "name": f"{first_name} {last_name}",
-            "id": app_id,
-            "amt": format_currency(float(loan_amount)),
-            "type": "PERSONAL",
-            "dti": f"{dti_val:.1f}%",
-            "score": int(credit_score),
-            "decision": decision_label,
-            "rate": rate,
-            "desc": f"Personal loan · {format_currency(float(loan_amount))} · {first_name} {last_name}",
-            "label": app_id,
-            "created_at": datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S UTC")
-        }
-        applications.insert(0, new_app)
+        # Save to DB
+        new_app = models.Application(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            annual_income=annual_income,
+            loan_amount=loan_amount,
+            credit_score=credit_score,
+            employment_status=employment_status,
+            housing_status=housing_status,
+            loan_term=loan_term,
+            status=decision_label.capitalize() if decision_label != "APPROVED" else "Approved",
+            confidence=confidence_score if 'confidence_score' in locals() else 0.0,
+            remarks=remarks
+        )
+        db.add(new_app)
+        db.commit()
         
         return JSONResponse(status_code=status_code, content={
             "status": decision_label.capitalize() if decision_label != "APPROVED" else "Success",
             "remarks": remarks,
-            "stage": stage
+            "stage": stage,
+            "metrics": decision_result.get("metrics", {})
         })
 
     except Exception as e:

@@ -16,103 +16,165 @@
         <div class="orb orb-3"></div>
     </div>
 
-    <div class="container glassmorphism fade-in-up">
-        <header class="app-header">
-            <h1>NexusBank</h1>
-            <p>Autonomous Agentic Loan Origination</p>
-        </header>
+    <nav class="navbar">
+        <div class="nav-brand">NexusBank</div>
+        <a href="#apply" class="nav-apply-btn">Apply for Loan</a>
+    </nav>
 
-        <form id="loanForm" class="loan-form">
-            <div class="form-section">
-                <h2>1. Personal Details</h2>
-                <div class="input-group">
-                    <input type="text" id="firstName" name="first_name" required placeholder=" ">
-                    <label for="firstName">First Name</label>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="lastName" name="last_name" required placeholder=" ">
-                    <label for="lastName">Last Name</label>
-                </div>
-                <div class="input-group">
-                    <input type="email" id="email" name="email" required placeholder=" ">
-                    <label for="email">Email Address</label>
-                </div>
+    <main>
+        <section class="hero-section fade-in-up">
+            <h1>The Future of Agentic Finance</h1>
+            <p>Experience lightning-fast loan origination powered by a swarm of specialized AI Agents and an ensemble of
+                Machine Learning models. No more waiting, just instant, fair decisions.</p>
+        </section>
+
+        <section class="cards-section fade-in-up" style="animation-delay: 0.2s;">
+            <div class="info-card">
+                <h3><span class="info-icon">💡</span> Important Details</h3>
+                <p>Taking a personal loan is a significant financial decision. NexusBank offers transparent, competitive
+                    terms designed around your unique financial profile, whether for debt consolidation, emergencies, or
+                    major purchases.</p>
+                <ul>
+                    <li>12, 36, or 60-month terms</li>
+                    <li>Fixed Interest Rates</li>
+                    <li>No Prepayment Penalties</li>
+                </ul>
             </div>
 
-            <div class="form-section">
-                <h2>2. Financial Information</h2>
-                <div class="input-group">
-                    <input type="number" id="annualIncome" name="annual_income" required placeholder=" ">
-                    <label for="annualIncome">Annual Income ($)</label>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="loanAmount" name="loan_amount" required placeholder=" ">
-                    <label for="loanAmount">Requested Loan Amount ($)</label>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="creditScore" name="credit_score" required placeholder=" ">
-                    <label for="creditScore">Credit Score</label>
-                </div>
+            <div class="info-card">
+                <h3><span class="info-icon">⚠️</span> Risks of Non-Payment</h3>
+                <p>Please borrow responsibly. A loan is a legal obligation, and failure to meet your monthly repayment
+                    terms can lead to severe consequences for your financial health.</p>
+                <ul>
+                    <li>Damage to your Credit Score</li>
+                    <li>Accumulation of late fees</li>
+                    <li>Potential legal action or collections</li>
+                </ul>
             </div>
 
-            <div class="form-section">
-                <h2>3. Verification Documents</h2>
-                <div class="file-upload">
-                    <label for="identityDocument" class="file-label">
-                        <span class="file-icon">📄</span> <span id="idFileName">Upload Identity Proof (Optional)</span>
-                    </label>
-                    <input type="file" id="identityDocument" name="identity_document" accept=".pdf, .png, .jpg, .jpeg">
-                </div>
-                <div class="file-upload">
-                    <label for="incomeProof" class="file-label">
-                        <span class="file-icon">📊</span> <span id="incomeFileName">Upload Income Proof
-                            (Optional)</span>
-                    </label>
-                    <input type="file" id="incomeProof" name="income_proof" accept=".pdf, .png, .jpg, .jpeg">
-                </div>
+            <div class="info-card">
+                <h3><span class="info-icon">🤖</span> The Agentic Advantage</h3>
+                <p>Traditional banks rely on slow human underwriters and biased heuristics. NexusBank's Autonomous Loan
+                    Origination System uses advanced AI to process your application securely in seconds.</p>
+                <ul>
+                    <li>Intake and Validation Agents scrutinize signals instantly.</li>
+                    <li>A multi-model Ensemble guarantees unbiased consensus.</li>
+                    <li>Zero paperwork or branch visits required.</li>
+                </ul>
             </div>
+        </section>
 
-            <button type="submit" class="submit-btn" id="submitBtn">
-                <span class="btn-text">Initiate Agentic Application</span>
-                <div class="spinner" id="btnSpinner" style="display:none;"></div>
-            </button>
-        </form>
+        <section id="apply" class="apply-wrapper fade-in-up">
+            <div class="container glassmorphism">
+                <header class="app-header">
+                    <h2>Begin Application</h2>
+                    <p class="subtitle">Secure & Automated</p>
+                </header>
 
-        <div id="statusPipeline" class="status-pipeline hidden">
-            <h2>Autonomous Processing</h2>
-            <div class="pipeline-stages">
-                <div class="stage" id="stage-intake">
-                    <div class="stage-icon">📥</div>
-                    <div class="stage-details">
-                        <h4>Intake Agent</h4>
-                        <p>Awaiting data ingestion...</p>
+                <form id="loanForm" class="loan-form">
+                    <div class="form-section">
+                        <h2>1. Personal Details</h2>
+                        <div class="input-group">
+                            <input type="text" id="firstName" name="first_name" required placeholder=" ">
+                            <label for="firstName">First Name</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="lastName" name="last_name" required placeholder=" ">
+                            <label for="lastName">Last Name</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" id="email" name="email" required placeholder=" ">
+                            <label for="email">Email Address</label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2>2. Financial Information</h2>
+                        <div class="input-group">
+                            <input type="number" id="annualIncome" name="annual_income" required placeholder=" ">
+                            <label for="annualIncome">Annual Income ($)</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="number" id="loanAmount" name="loan_amount" required placeholder=" ">
+                            <label for="loanAmount">Requested Loan Amount ($)</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="number" id="creditScore" name="credit_score" required placeholder=" ">
+                            <label for="creditScore">Credit Score</label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2>3. Financial Profile Details</h2>
+                        <div class="input-group">
+                            <select id="employmentStatus" name="employment_status" required>
+                                <option value="" disabled selected>Select Employment Status</option>
+                                <option value="2">Employed (Full-Time/Part-Time)</option>
+                                <option value="1">Self-Employed / Freelance</option>
+                                <option value="0">Unemployed</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <select id="housingStatus" name="housing_status" required>
+                                <option value="" disabled selected>Select Housing Status</option>
+                                <option value="2">Own Home Outright</option>
+                                <option value="1">Paying Mortgage</option>
+                                <option value="0">Renting</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <select id="loanTerm" name="loan_term" required>
+                                <option value="" disabled selected>Select Loan Term</option>
+                                <option value="12">12 Months</option>
+                                <option value="36">36 Months</option>
+                                <option value="60">60 Months</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="btn-text">Initiate Agentic Application</span>
+                        <div class="spinner" id="btnSpinner" style="display:none;"></div>
+                    </button>
+                </form>
+
+                <div id="statusPipeline" class="status-pipeline hidden">
+                    <h2>Autonomous Processing</h2>
+                    <div class="pipeline-stages">
+                        <div class="stage" id="stage-intake">
+                            <div class="stage-icon">📥</div>
+                            <div class="stage-details">
+                                <h4>Intake Agent</h4>
+                                <p>Awaiting data ingestion...</p>
+                            </div>
+                        </div>
+                        <div class="stage" id="stage-validation">
+                            <div class="stage-icon">🔍</div>
+                            <div class="stage-details">
+                                <h4>Validation Agent</h4>
+                                <p>Pending profile & rule checks...</p>
+                            </div>
+                        </div>
+                        <div class="stage" id="stage-decision">
+                            <div class="stage-icon">⚖️</div>
+                            <div class="stage-details">
+                                <h4>AI Ensemble Decision</h4>
+                                <p>Pending final model consensus...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="stage" id="stage-validation">
-                    <div class="stage-icon">🔍</div>
-                    <div class="stage-details">
-                        <h4>Validation Agent</h4>
-                        <p>Pending document & rule checks...</p>
-                    </div>
-                </div>
-                <div class="stage" id="stage-decision">
-                    <div class="stage-icon">⚖️</div>
-                    <div class="stage-details">
-                        <h4>Decision Agent</h4>
-                        <p>Pending final review...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div id="resultModal" class="result-modal hidden">
-            <h2 id="resultTitle">Decision Pending</h2>
-            <div class="remarks-box">
-                <p id="resultRemarks">Remarks will appear here.</p>
+                <div id="resultModal" class="result-modal hidden">
+                    <h2 id="resultTitle">Decision Pending</h2>
+                    <div class="remarks-box">
+                        <p id="resultRemarks">Remarks will appear here.</p>
+                    </div>
+                    <button id="resetBtn" class="secondary-btn">New Application</button>
+                </div>
             </div>
-            <button id="resetBtn" class="secondary-btn">New Application</button>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script src="/static/app.js"></script>
 </body>

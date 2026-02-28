@@ -13,11 +13,10 @@ class IntakeAgent:
             "financials": {
                 "annual_income": float(kwargs.get("annual_income", 0)),
                 "loan_amount": float(kwargs.get("loan_amount", 0)),
-                "credit_score": int(kwargs.get("credit_score", 0))
-            },
-            "documents": {
-                "identity_doc": kwargs.get("identity_doc_name"),
-                "income_proof": kwargs.get("income_doc_name")
+                "credit_score": int(kwargs.get("credit_score", 0)),
+                "employment_status": int(kwargs.get("employment_status", 0)),
+                "housing_status": int(kwargs.get("housing_status", 0)),
+                "loan_term": int(kwargs.get("loan_term", 36))
             }
         }
         return structured_data
